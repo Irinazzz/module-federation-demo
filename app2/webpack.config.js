@@ -1,6 +1,7 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   devtool: false,
@@ -25,6 +26,13 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: path.resolve(__dirname, './public/index.html'),
     }),
+    new ModuleFederationPlugin({
+      // 配置导入的模块映射
+      // [导入项目name]："[导入项目name]@ [访问路径]/[导入模块filename]"
+      remotes: {
+        app1: "app1@http://localhost:3001/remoteEntry.js",
+      },
+   })
   ],
   devServer: {
     port: 3002,
